@@ -1,0 +1,8 @@
+{
+  "name": "marketing-ai-toolkit",
+  "version": "1.0.0",
+  "description": "5 AI marketing agents powered by Gemini - built by Priyanshi Srivastava",
+  "engines": {
+    "node": "18.x"
+  }
+}

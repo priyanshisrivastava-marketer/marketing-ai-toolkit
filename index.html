@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marketing AI Toolkit · by Priyanshi Srivastava</title>
+<meta name="description" content="5 free AI marketing agents — Campaign Brief, Content Repurposer, Competitor Spy, Subject Line Lab, ICP Builder.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0D0B14; --bg2: #0F0D1A; --bg3: #13101F;
+    --border: #1E1A2E; --border2: #2A2440;
+    --text: #E8E4F0; --muted: #6B6480; --dim: #4A4260; --subdim: #3A3450;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border); padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg); z-index: 100;
+  }
+  .header-brand { display: flex; align-items: center; gap: 10px; }
+  .header-logo { font-size: 18px; }
+  .header-name { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-by { font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 0.06em; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .uses-badge {
+    font-size: 11px; padding: 5px 14px; border-radius: 20px;
+    border: 1px solid var(--border2); color: var(--muted);
+    display: none;
+  }
+  .uses-badge.visible { display: block; }
+  .portfolio-link {
+    font-size: 11px; color: #C9A84C; text-decoration: none;
+    border: 1px solid #C9A84C44; padding: 5px 14px; border-radius: 20px;
+    letter-spacing: 0.06em; transition: all 0.15s;
+  }
+  .portfolio-link:hover { background: #C9A84C18; }
+
+  /* HERO BANNER */
+  .hero {
+    background: linear-gradient(135deg, #13101F 0%, #0D0B14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 32px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+  }
+  .hero-left h1 { font-size: 22px; font-weight: 700; color: #F0EDF8; line-height: 1.3; }
+  .hero-left h1 span { color: #C9A84C; }
+  .hero-left p { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.6; max-width: 520px; }
+  .hero-stats { display: flex; gap: 24px; }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-size: 22px; font-weight: 700; color: #C9A84C; }
+  .hero-stat-label { font-size: 10px; color: var(--dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+  /* TOOL NAV */
+  .tool-nav {
+    display: flex; border-bottom: 1px solid var(--border);
+    background: var(--bg2); overflow-x: auto; padding: 0 32px;
+    scrollbar-width: none;
+  }
+  .tool-nav::-webkit-scrollbar { display: none; }
+  .tool-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 14px 18px; display: flex; align-items: center; gap: 7px;
+    font-family: inherit; font-size: 12px; font-weight: 400;
+    white-space: nowrap; letter-spacing: 0.04em;
+    border-bottom: 2px solid transparent; color: var(--muted); transition: all 0.15s;
+  }
+  .tool-btn.active { font-weight: 600; }
+  .tool-btn:hover { color: var(--text); }
+
+  /* MAIN */
+  .main { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 200px); }
+  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } .hero { flex-direction: column; } .hero-stats { justify-content: flex-start; } }
+
+  /* LEFT */
+  .left-panel { border-right: 1px solid var(--border); padding: 24px 28px; display: flex; flex-direction: column; gap: 22px; overflow-y: auto; }
+  .tool-hero { display: flex; align-items: center; gap: 12px; }
+  .tool-icon-box { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .tool-name { font-size: 16px; font-weight: 700; color: #F0EDF8; }
+  .tool-tagline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); font-weight: 600; margin-bottom: 10px; }
+  .steps { display: flex; flex-direction: column; gap: 7px; }
+  .step-card { display: flex; gap: 10px; padding: 10px 12px; background: var(--bg3); border-radius: 8px; border: 1px solid var(--border); }
+  .step-num { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; min-width: 46px; padding-top: 1px; }
+  .step-title { font-size: 12px; font-weight: 600; color: #D0CADF; margin-bottom: 2px; }
+  .step-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .form-fields { display: flex; flex-direction: column; gap: 13px; }
+  .field-label { display: block; font-size: 11px; color: #8A82A0; margin-bottom: 5px; letter-spacing: 0.06em; font-weight: 500; }
+  .field-input, .field-textarea {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 8px; color: var(--text); font-size: 13px;
+    padding: 9px 12px; font-family: inherit; outline: none; transition: border-color 0.15s;
+  }
+  .field-input:focus, .field-textarea:focus { border-color: #5A5270; }
+  .field-textarea { resize: vertical; line-height: 1.6; }
+  .error-msg { font-size: 12px; color: #E05C5C; padding: 8px 12px; background: #E05C5C15; border-radius: 6px; display: none; }
+  .generate-btn {
+    border: none; border-radius: 8px; padding: 12px 20px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: inherit; letter-spacing: 0.06em;
+    transition: all 0.15s; width: 100%; margin-top: 2px;
+  }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* RIGHT */
+  .right-panel { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+  .output-header { display: flex; align-items: center; justify-content: space-between; }
+  .copy-btn {
+    background: var(--bg3); border: 1px solid var(--border2); color: var(--muted);
+    font-size: 11px; padding: 5px 14px; border-radius: 20px; cursor: pointer;
+    font-family: inherit; letter-spacing: 0.08em; transition: all 0.2s;
+  }
+  .output-empty {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 10px; border: 1px dashed var(--border);
+    border-radius: 12px; padding: 40px; min-height: 360px;
+  }
+  .output-empty-icon { font-size: 36px; opacity: 0.1; }
+  .output-empty-text { font-size: 13px; color: var(--subdim); text-align: center; line-height: 1.7; }
+  .spinner-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 360px; }
+  .spinner { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner-text { font-size: 12px; color: var(--dim); letter-spacing: 0.08em; }
+  .output-box { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; overflow-y: auto; max-height: calc(100vh - 280px); }
+  .output-text { white-space: pre-wrap; word-break: break-word; font-size: 12.5px; line-height: 1.85; color: #C8C0DC; font-family: 'Inter', sans-serif; }
+  .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .meta-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .meta-label { font-size: 10px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .meta-val { font-size: 12px; color: #8A82A0; margin-top: 3px; font-weight: 500; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #1E1A2E; border: 1px solid var(--border2); color: var(--text);
+    font-size: 13px; padding: 12px 24px; border-radius: 30px;
+    box-shadow: 0 8px 32px #00000066; opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; z-index: 999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <span class="header-logo" id="headerIcon">✦</span>
+    <div>
+      <div class="header-name">Marketing AI Toolkit</div>
+      <div class="header-by">by Priyanshi Srivastava · 5 free AI agents</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="uses-badge" id="usesBadge">— uses left today</div>
+    <a class="portfolio-link" href="https://priyanshisrivastava-marketer.github.io" target="_blank">Portfolio ↗</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <h1>5 AI Agents for <span>Modern Marketers</span></h1>
+    <p>Campaign briefs, content repurposing, competitor intel, email subject lines, and ICP building — all free, all instant. No sign-up needed.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-label">AI Agents</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">Free</div><div class="hero-stat-label">No sign-up</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">&lt;10s</div><div class="hero-stat-label">Per output</div></div>
+  </div>
+</div>
+
+<!-- TOOL NAV -->
+<div class="tool-nav" id="toolNav"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="left-panel" id="leftPanel"></div>
+  <div class="right-panel" id="rightPanel"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── REPLACE THIS WITH YOUR VERCEL URL AFTER DEPLOYING ───────────────
+// Example: "https://marketing-ai-toolkit.vercel.app"
+// Leave as empty string while testing locally — it will call /api/generate
+const BACKEND_URL = "";
+// ─────────────────────────────────────────────────────────────────────
+
+const API_ENDPOINT = BACKEND_URL
+  ? `${BACKEND_URL}/api/generate`
+  : "/api/generate";
+
+const TOOLS = [
+  {
+    id: "brief", icon: "✦", label: "Campaign Brief",
+    tagline: "Brief → Full strategy in seconds", color: "#C9A84C",
+    fields: [
+      { key: "product", label: "Product / Service Name", placeholder: "e.g. Medscape CME Platform", required: true },
+      { key: "audience", label: "Target Audience", placeholder: "e.g. US-based oncologists aged 35–55", required: true },
+      { key: "goal", label: "Campaign Goal", placeholder: "e.g. Drive trial sign-ups for Q3", required: true },
+      { key: "budget", label: "Budget Range (optional)", placeholder: "e.g. $50K", required: false },
+    ],
+    steps: [
+      { step: "Step 1", title: "Name your product", desc: "Type exactly what you're marketing. Be specific — 'Medscape CME Platform' beats 'our product'." },
+      { step: "Step 2", title: "Describe your audience", desc: "Who is the campaign for? Include role, industry, and key traits." },
+      { step: "Step 3", title: "Set your goal", desc: "What should this campaign achieve? Trial sign-ups, brand awareness, event registrations?" },
+      { step: "Step 4", title: "Generate & copy", desc: "Hit Generate. Your full brief appears instantly. Copy it into a doc." },
+    ],
+    buildPrompt: (f) => `You are a senior B2B marketing strategist. Generate a complete, professional campaign brief.
+Product/Service: ${f.product}
+Target Audience: ${f.audience}
+Campaign Goal: ${f.goal}
+Budget: ${f.budget || "Not specified"}
+
+Structure with these sections:
+1. Campaign Overview (2–3 sentences)
+2. Target Audience Breakdown (demographics, psychographics, pain points)
+3. Core Message & Value Proposition
+4. Channel Strategy (ranked by priority with rationale)
+5. Creative Angles (3 distinct concepts)
+6. KPIs & Success Metrics
+7. Recommended Timeline (week-by-week for 4 weeks)
+Be specific, sharp, and actionable. No fluff.`,
+  },
+  {
+    id: "repurpose", icon: "⟳", label: "Content Repurposer",
+    tagline: "1 blog → 5 platform formats", color: "#9B7FD4",
+    fields: [
+      { key: "content", label: "Paste Your Blog Post / Article", placeholder: "Paste your full content here...", required: true, multiline: true },
+      { key: "brand", label: "Brand Voice (optional)", placeholder: "e.g. Professional but approachable, data-driven", required: false },
+    ],
+    steps: [
+      { step: "Step 1", title: "Copy your blog post", desc: "Go to any article you've written. Select all text. Paste it in the box." },
+      { step: "Step 2", title: "Set your voice (optional)", desc: "Describe how your brand sounds. Skip if unsure — AI will infer it." },
+      { step: "Step 3", title: "Generate all 5 formats", desc: "LinkedIn, Twitter thread, email, Instagram caption, and podcast points appear instantly." },
+      { step: "Step 4", title: "Post & schedule", desc: "Copy each format into Buffer or Hootsuite. One blog = a week of content." },
+    ],
+    buildPrompt: (f) => `You are a content strategist specialising in multi-platform distribution. Repurpose the content below into 5 platform-native formats.
+Brand Voice: ${f.brand || "Professional, clear, and insight-driven"}
+
+ORIGINAL CONTENT:
+${f.content}
+
+Generate exactly:
+---
+🔵 LINKEDIN POST (200–250 words, hook opener, 3 key insights, CTA, 5 hashtags)
+---
+🐦 TWITTER/X THREAD (8–10 tweets, numbered, punchy, each under 280 chars)
+---
+📧 EMAIL NEWSLETTER SNIPPET (Subject line + 150-word body + CTA button text)
+---
+📸 INSTAGRAM CAPTION (150 words max, storytelling angle, 10 hashtags)
+---
+🎙️ PODCAST TALKING POINTS (5 bullet points an interviewer could use as questions)
+---`,
+  },
+  {
+    id: "competitor", icon: "◎", label: "Competitor Spy",
+    tagline: "Analyze rivals, find your edge", color: "#E05C5C",
+    fields: [
+      { key: "competitor", label: "Competitor Name", placeholder: "e.g. Healthline, Doceree", required: true },
+      { key: "yourBrand", label: "Your Brand / Product", placeholder: "e.g. Medscape by WebMD", required: true },
+      { key: "category", label: "Industry / Category", placeholder: "e.g. Healthcare professional media", required: true },
+    ],
+    steps: [
+      { step: "Step 1", title: "Name your competitor", desc: "Type the competitor's brand name exactly as it appears publicly." },
+      { step: "Step 2", title: "Name your brand", desc: "Enter your own product so the AI frames advice around you." },
+      { step: "Step 3", title: "Set the category", desc: "What market are you both in? Be specific." },
+      { step: "Step 4", title: "Read your edge", desc: "AI reveals their weak spots and gives you 3 campaign angles to exploit them." },
+    ],
+    buildPrompt: (f) => `You are a competitive intelligence analyst. Analyse the competitor and provide actionable counter-positioning.
+Competitor: ${f.competitor}
+Our Brand: ${f.yourBrand}
+Industry: ${f.category}
+
+Provide:
+1. Competitor Messaging Fingerprint (their core narrative, tone, positioning)
+2. Their Target Audience (who they seem to be speaking to)
+3. Messaging Gaps & Weaknesses (where their positioning is weak)
+4. Our Counter-Positioning Strategy (how ${f.yourBrand} should differentiate)
+5. 3 Campaign Angles that exploit these gaps
+6. Keywords & Phrases to Own (that the competitor is NOT owning)
+7. One Bold Move (unconventional strategy to leapfrog them)`,
+  },
+  {
+    id: "subjectline", icon: "✉", label: "Subject Line Lab",
+    tagline: "10 A/B variants, zero guessing", color: "#4CAF8C",
+    fields: [
+      { key: "campaign", label: "Campaign Type", placeholder: "e.g. Product launch, webinar invite, nurture email", required: true },
+      { key: "audience", label: "Audience Segment", placeholder: "e.g. Mid-funnel B2B leads in pharma", required: true },
+      { key: "offer", label: "Key Offer / Hook", placeholder: "e.g. Free CME credits for specialists", required: true },
+    ],
+    steps: [
+      { step: "Step 1", title: "Pick your campaign type", desc: "Is this a product launch? Webinar? Newsletter? Name it." },
+      { step: "Step 2", title: "Describe the audience", desc: "Who's receiving this email? Specific = better subject lines." },
+      { step: "Step 3", title: "State the hook / offer", desc: "What's the one thing you want them to know or do?" },
+      { step: "Step 4", title: "Get 10 variations", desc: "Each uses a different psychological trigger. Pick 2–3 to A/B test." },
+    ],
+    buildPrompt: (f) => `You are an email marketing expert. Generate 10 high-converting email subject lines for A/B testing.
+Campaign Type: ${f.campaign}
+Audience: ${f.audience}
+Key Offer: ${f.offer}
+
+For each, use this exact format:
+[Number]. **Subject Line** | Trigger: [psychological trigger] | Preview text: [40-char suggestion]
+
+Use these 10 triggers (one each):
+1. Curiosity gap  2. Urgency/scarcity  3. Social proof  4. Personalization  5. FOMO
+6. Benefit-led  7. Question format  8. Number/data-driven  9. Contrarian/pattern interrupt  10. Authority/credibility
+
+End with: "Top 3 to test first" with brief rationale.`,
+  },
+  {
+    id: "icp", icon: "◈", label: "ICP Builder",
+    tagline: "Build your ideal customer profile", color: "#5B9BD5",
+    fields: [
+      { key: "product", label: "Product / Service", placeholder: "e.g. AI-powered targeting platform for pharma marketers", required: true },
+      { key: "industry", label: "Target Industry", placeholder: "e.g. Healthcare / Pharma", required: true },
+      { key: "companySize", label: "Company Size (optional)", placeholder: "e.g. Mid-market, 500–5000 employees", required: false },
+    ],
+    steps: [
+      { step: "Step 1", title: "Describe your product", desc: "What does your product do and who is it for, in one sentence?" },
+      { step: "Step 2", title: "Set the industry", desc: "Which industry are you targeting? 'Pharma' is better than 'Healthcare'." },
+      { step: "Step 3", title: "Set company size", desc: "Enterprise? SMB? Mid-market? Leave blank if unsure." },
+      { step: "Step 4", title: "Get your full ICP", desc: "Firmographics, buyer persona, trigger events, channel preferences, and outreach hooks." },
+    ],
+    buildPrompt: (f) => `You are a B2B demand generation and ABM expert. Build a precise Ideal Customer Profile.
+Product: ${f.product}
+Industry: ${f.industry}
+Company Size: ${f.companySize || "Not specified"}
+
+Deliver:
+🏢 FIRMOGRAPHIC PROFILE
+- Industries & sub-verticals, company size (revenue + headcount), geography, tech stack signals, growth signals
+
+👤 BUYER PERSONA (Primary Decision Maker)
+- Title & seniority, responsibilities, top 3 pain points, what keeps them up at night, how they measure success
+
+⚡ TRIGGER EVENTS
+- 5 specific events that signal buying intent
+
+📣 CHANNEL PREFERENCES
+- Where they consume content, conferences/communities, influencers/publications they trust
+
+🎯 OUTREACH HOOKS
+- One killer cold email opening line
+- One LinkedIn message hook
+- One killer discovery call question`,
+  },
+];
+
+// ── STATE ─────────────────────────────────────
+let activeTool = TOOLS[0];
+let formValues = {};
+let currentOutput = "";
+let usesRemaining = 5;
+
+// ── HELPERS ───────────────────────────────────
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function showToast(msg, duration = 3000) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), duration);
+}
+
+function updateUsesBadge() {
+  const badge = $("usesBadge");
+  badge.textContent = `${usesRemaining} uses left today`;
+  badge.classList.add("visible");
+  badge.style.color = usesRemaining <= 1 ? "#E05C5C" : "";
+  badge.style.borderColor = usesRemaining <= 1 ? "#E05C5C44" : "";
+}
+
+// ── RENDER NAV ────────────────────────────────
+function renderNav() {
+  $("toolNav").innerHTML = TOOLS.map(t => `
+    <button class="tool-btn ${t.id === activeTool.id ? "active" : ""}"
+      onclick="switchTool('${t.id}')"
+      style="${t.id === activeTool.id ? `color:${t.color};border-bottom-color:${t.color}` : ""}">
+      <span>${t.icon}</span>${t.label}
+    </button>
+  `).join("");
+}
+
+// ── RENDER LEFT ───────────────────────────────
+function renderLeft() {
+  const t = activeTool;
+  $("leftPanel").innerHTML = `
+    <div class="tool-hero">
+      <div class="tool-icon-box" style="background:${t.color}18;color:${t.color}">${t.icon}</div>
+      <div>
+        <div class="tool-name">${t.label}</div>
+        <div class="tool-tagline">${t.tagline}</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">How it works</div>
+      <div class="steps">
+        ${t.steps.map(s => `
+          <div class="step-card">
+            <div class="step-num" style="color:${t.color}">${s.step}</div>
+            <div><div class="step-title">${s.title}</div><div class="step-desc">${s.desc}</div></div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Your inputs</div>
+      <div class="form-fields">
+        ${t.fields.map(f => `
+          <div>
+            <label class="field-label">
+              ${f.label}${f.required ? `<span style="color:${t.color};margin-left:3px">*</span>` : ""}
+            </label>
+            ${f.multiline
+              ? `<textarea class="field-textarea" id="field_${f.key}" placeholder="${f.placeholder}" rows="5" oninput="setField('${f.key}',this.value)">${formValues[f.key]||""}</textarea>`
+              : `<input class="field-input" id="field_${f.key}" type="text" placeholder="${f.placeholder}" value="${formValues[f.key]||""}" oninput="setField('${f.key}',this.value)" />`
+            }
+          </div>`).join("")}
+        <div class="error-msg" id="errorMsg"></div>
+        <button class="generate-btn" id="genBtn"
+          style="background:${t.color};color:#0D0B14;"
+          onclick="handleGenerate()">
+          Generate ${t.label} →
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ── RENDER RIGHT ──────────────────────────────
+function renderRight(state = "empty") {
+  const t = activeTool;
+  const rp = $("rightPanel");
+  if (state === "empty") {
+    rp.innerHTML = `
+      <div class="output-header">
+        <div class="section-label" style="margin-bottom:0">Output</div>
+      </div>
+      <div class="output-empty">
+        <div class="output-empty-icon">${t.icon}</div>
+        <div class="output-empty-text">Fill in your inputs on the left<br>and hit Generate.<br><br><span style="font-size:11px;color:#3A3450">Free · No sign-up · Results in ~10 seconds</span></div>
+      </div>
+      <div class="meta-row">
+        ${[["Model","Gemini Flash"],["Speed","~10 sec"],["Cost","Free"],["Limit","5/day"]].map(([l,v])=>`
+          <div class="meta-card"><div class="meta-label">${l}</div><div class="meta-val">${v}</div></div>
+        `).join("")}
+      </div>`;
+  } else if (state === "loading") {
+    rp.innerHTML = `
+      <div class="output-header"><div class="section-label" style="margin-bottom:0">Output</div></div>
+      <div class="spinner-wrap">
+        <div class="spinner" style="border-top-color:${t.color}"></div>
+        <div class="spinner-text">AI is thinking…</div>
+      </div>`;
+  } else if (state === "done") {
+    rp.innerHTML = `
+      <div class="output-header">
+        <div class="section-label" style="margin-bottom:0">Output</div>
+        <button class="copy-btn" id="copyBtn" onclick="handleCopy()">Copy all</button>
+      </div>
+      <div class="output-box">
+        <pre class="output-text">${esc(currentOutput)}</pre>
+      </div>`;
+  }
+}
+
+// ── SWITCH TOOL ───────────────────────────────
+function switchTool(id) {
+  activeTool = TOOLS.find(t => t.id === id);
+  formValues = {};
+  currentOutput = "";
+  $("headerIcon").textContent = activeTool.icon;
+  $("headerIcon").style.color = activeTool.color;
+  renderNav();
+  renderLeft();
+  renderRight("empty");
+}
+
+function setField(key, val) { formValues[key] = val; }
+
+// ── GENERATE ──────────────────────────────────
+async function handleGenerate() {
+  const missing = activeTool.fields.filter(f => f.required && !formValues[f.key]?.trim());
+  if (missing.length) {
+    const el = $("errorMsg");
+    el.textContent = "Please fill in: " + missing.map(f => f.label.replace(" (optional)","")).join(", ");
+    el.style.display = "block";
+    return;
+  }
+  const errEl = $("errorMsg");
+  if (errEl) errEl.style.display = "none";
+
+  renderRight("loading");
+
+  try {
+    const res = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: activeTool.buildPrompt(formValues) }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 429) {
+      currentOutput = data.error || "Daily limit reached. Come back tomorrow!";
+      usesRemaining = 0;
+      updateUsesBadge();
+      renderRight("done");
+      return;
+    }
+
+    if (!res.ok || data.error) {
+      currentOutput = "❌ " + (data.error || "Something went wrong. Please try again.");
+      renderRight("done");
+      return;
+    }
+
+    currentOutput = data.result || "No output. Please try again.";
+    if (data.usesRemaining !== undefined) {
+      usesRemaining = data.usesRemaining;
+      updateUsesBadge();
+    }
+    renderRight("done");
+
+  } catch (e) {
+    currentOutput = "❌ Network error. Please check your connection and try again.";
+    renderRight("done");
+  }
+}
+
+// ── COPY ─────────────────────────────────────
+function handleCopy() {
+  navigator.clipboard.writeText(currentOutput).then(() => {
+    const btn = $("copyBtn");
+    btn.textContent = "✓ Copied!";
+    btn.style.color = activeTool.color;
+    btn.style.borderColor = activeTool.color + "66";
+    showToast("Copied to clipboard ✓");
+    setTimeout(() => {
+      btn.textContent = "Copy all";
+      btn.style.color = "";
+      btn.style.borderColor = "";
+    }, 2000);
+  });
+}
+
+// ── INIT ─────────────────────────────────────
+switchTool("brief");
+</script>
+</body>
+</html>
