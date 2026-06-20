@@ -126,7 +126,35 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner-text { font-size: 12px; color: var(--dim); letter-spacing: 0.08em; }
   .output-box { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; overflow-y: auto; max-height: calc(100vh - 280px); }
-  .output-text { white-space: pre-wrap; word-break: break-word; font-size: 12.5px; line-height: 1.85; color: #C8C0DC; font-family: 'Inter', sans-serif; }
+  .output-text {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.8;
+  font-size: 14px;
+  color: #E8E4F0;
+}
+
+.output-text h1 {
+  color: #F0D01A;
+  margin: 24px 0 12px;
+  font-size: 28px;
+}
+
+.output-text h2 {
+  color: #F0D01A;
+  margin: 20px 0 10px;
+  font-size: 22px;
+}
+
+.output-text h3 {
+  color: #F0D01A;
+  margin: 16px 0 8px;
+  font-size: 18px;
+}
+
+.output-text strong {
+  color: white;
+}
   .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .meta-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; text-align: center; }
   .meta-label { font-size: 10px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
@@ -494,11 +522,18 @@ function renderRight(state = "empty") {
         <button class="copy-btn" id="copyBtn" onclick="handleCopy()">Copy all</button>
       </div>
       <div class="output-box">
-        <pre class="output-text">${esc(currentOutput)}</pre>
+        <div class="output-text">${formatOutput(currentOutput)}</div>
       </div>`;
   }
 }
-
+function formatOutput(text) {
+  return text
+    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
 // ── SWITCH TOOL ───────────────────────────────
 function switchTool(id) {
   activeTool = TOOLS.find(t => t.id === id);
