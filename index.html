@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Marketing AI Toolkit · by Priyanshi Srivastava</title>
 <meta name="description" content="5 free AI marketing agents — Campaign Brief, Content Repurposer, Competitor Spy, Subject Line Lab, ICP Builder.">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -519,9 +520,13 @@ function renderRight(state = "empty") {
     rp.innerHTML = `
       <div class="output-header">
         <div class="section-label" style="margin-bottom:0">Output</div>
-        <button class="copy-btn" id="copyBtn" onclick="handleCopy()">Copy all</button>
+        <div style="display:flex;gap:10px;">
+  <button class="copy-btn" id="copyBtn" onclick="handleCopy()">Copy all</button>
+
+  <button class="copy-btn" onclick="downloadPDF()">📄 PDF</button>
+</div>
       </div>
-      <div class="output-box">
+      <div class="output-box" id="pdfContent">
         <div class="output-text">${formatOutput(currentOutput)}</div>
       </div>`;
   }
@@ -597,7 +602,24 @@ async function handleGenerate() {
     renderRight("done");
   }
 }
+function downloadPDF() {
+  const element = document.getElementById("pdfContent");
 
+  html2pdf()
+    .set({
+      margin: 10,
+      filename: `Marketing-Report-${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    })
+    .from(element)
+    .save();
+}
 // ── COPY ─────────────────────────────────────
 function handleCopy() {
   navigator.clipboard.writeText(currentOutput).then(() => {
